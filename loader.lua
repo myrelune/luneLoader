@@ -1,11 +1,19 @@
--- yes this entire ui is ai generated, no i dont care
+if script_key then
+    local api = loadstring(game:HttpGet("https://sdkapi-public.luarmor.net/library.lua"))()
+    api.script_id = "61a5ee8980352bbf717ab957bf207611"
+    local result = api.check_key(script_key)
+    if result.code == "KEY_VALID" then
+        api.load_script()
+        return
+    end
+end
 
 local tween = game:GetService("TweenService")
 local input = game:GetService("UserInputService")
 
 
 local discord = "https://discord.gg/3MNMjGWRmw"
-local getkey = " https://ads.luarmor.net/get_key?for=Lune_Key-SAfBokULSJJW"
+local getkey = "https://ads.luarmor.net/get_key?for=Lune_Key-SAfBokULSJJW"
 
 local gui = Instance.new("ScreenGui")
 gui.Name = math.random(1000, 9999)
