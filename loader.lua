@@ -1,6 +1,43 @@
+-- Script Hub Configuration
+local SCRIPTS = {
+    UTD = {
+        id = "fefdbbf2ecc297b66352edbee99c4d89",
+        places = {
+            [133410800847665] = true, -- UTD Lobby
+            [106402284955512] = true, -- UTD In Game
+        }
+    },
+    ALS = {
+        id = "61a5ee8980352bbf717ab957bf207611",
+        places = {
+            [12886143095] = true,
+            [18583778121] = true,
+            [12900046592] = true,
+        }
+    }
+}
+
+-- Determine which script to load based on PlaceId
+local currentPlaceId = game.PlaceId
+local currentScript = nil
+
+for name, config in pairs(SCRIPTS) do
+    if config.places[currentPlaceId] then
+        currentScript = config
+        print("Lune Hub: Detected", name, "game")
+        break
+    end
+end
+
+if not currentScript then
+    warn("Lune Hub: Unsupported game (PlaceId:", currentPlaceId, ")")
+    return
+end
+
+-- Check if already has valid key
 if script_key then
     local api = loadstring(game:HttpGet("https://sdkapi-public.luarmor.net/library.lua"))()
-    api.script_id = "61a5ee8980352bbf717ab957bf207611"
+    api.script_id = currentScript.id
     local result = api.check_key(script_key)
     if result.code == "KEY_VALID" then
         api.load_script()
@@ -349,7 +386,7 @@ submit.Activated:Connect(function()
     showNotif("Checking key...", false)
     
     local api = loadstring(game:HttpGet("https://sdkapi-public.luarmor.net/library.lua"))()
-    api.script_id = "61a5ee8980352bbf717ab957bf207611"
+    api.script_id = currentScript.id
     
     local result = api.check_key(key)
     
