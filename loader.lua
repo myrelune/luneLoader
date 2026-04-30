@@ -17,6 +17,26 @@ local SCRIPTS = {
     }
 }
 
+-- Persistence Logic
+local SETTINGS_FILE = "LuneConfigs/loader_settings.json"
+
+local function loadKey()
+    if isfile(SETTINGS_FILE) then
+        local success, data = pcall(function()
+            return game:GetService("HttpService"):JSONDecode(readfile(SETTINGS_FILE))
+        end)
+        if success and data and data.script_key then
+            return data.script_key
+        end
+    end
+    return nil
+end
+
+-- Check if script_key is already defined or in file
+if not script_key or script_key == "" then
+    script_key = loadKey()
+end
+
 -- Determine which script to load based on PlaceId
 local currentPlaceId = game.PlaceId
 local currentScript = nil
@@ -35,14 +55,17 @@ if not currentScript then
 end
 
 -- Check if already has valid key
-if script_key then
+if script_key and script_key ~= "" then
     local api = loadstring(game:HttpGet("https://sdkapi-public.luarmor.net/library.lua"))()
     api.script_id = currentScript.id
     local result = api.check_key(script_key)
     if result.code == "KEY_VALID" then
+        print("Lune Hub: Valid key found (Auto-loading)")
         api.load_script()
         return
     end
+    -- If key was invalid, clear it so UI shows up
+    script_key = nil
 end
 
 local tween = game:GetService("TweenService")
@@ -57,7 +80,7 @@ gui.Name = math.random(1000, 9999)
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 gui.ResetOnSpawn = false
 gui.IgnoreGuiInset = true
-gui.Parent = gethui() or game.CoreGui
+gui.Parent = (gethui and gethui()) or game:GetService("CoreGui")
 
 -- background dim
 local dim = Instance.new("Frame", gui)
