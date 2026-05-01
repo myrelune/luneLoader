@@ -1,3 +1,6 @@
+if getgenv().LuneLoaderLoaded then return end
+getgenv().LuneLoaderLoaded = true
+
 -- Script Hub Configuration
 local SCRIPTS = {
     UTD = {
