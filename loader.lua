@@ -1,6 +1,10 @@
 if getgenv().LuneLoaderLoaded then return end
 getgenv().LuneLoaderLoaded = true
 
+while not game:IsLoaded() do
+    game.Loaded:Wait(1)
+end
+
 -- Script Hub Configuration
 local SCRIPTS = {
     UTD = {
